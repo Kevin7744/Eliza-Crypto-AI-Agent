@@ -1,81 +1,105 @@
-# Eliza-Crypto-AI-Agent.
-## Some random notes 
-- actions
-- providers, 
-- evaluators
-  
-### Pizza ordering agent
+# Eliza-Crypto-AI-Agent
 
-Limitations:
-- Payments are scary
-  sol : have a portal where the user can put their payment
-  sol : {way worse} just get the info in dms
--> ? How do connect the user's private info to the current conversation>
+## Some Random Notes
 
-Example state: 
-Cold
-<->
-warm
-<->
-hot
+- **Actions**
+- **Providers**
+- **Evaluators**
 
-Order flow
-agent - is waiting fpr someone to order pizza
-user - "yo lemme get a small cheese pizza"
-agent - checks if it knows the user
-      - IF the agent know the user
-        - the checks if the user has a payment metod file
-          - if the user has a payment method file
-            - agent places the order
-          - if the user does not have a payment method on file
-            - agent asks the user for their payment method
-            - if the user provides a payment method
-              - agent places the order
-              - agent sends confirmation message to the user
-            - if the user does not provide their payment method
-              - ask the user again
-      - If agent does not know the user
-        - The agent asks the user for their name
-        - The agent asks for the payment method
-        - agent places order
-        - agent send confirmation message to user 
+---
 
-![diagram](https://github.com/user-attachments/assets/08b4ed04-73d3-417f-9c3d-121d04f57eea)
+### Pizza Ordering Agent
 
-Caveat -- We can't ask this on a public cha, so we need a private chat with the user
+#### Limitations
 
-First, check if we are in dms or public messages -- if we're in DMs, we can get important private info
--- If we're in public messages, we need to tell the user to DM use [but we can start the order]
+- Payments are challenging:
+  - **Solution:** Have a portal where the user can enter their payment information.
+  - **Alternative (less secure):** Collect payment information through direct messages (DMs).
 
-Were are not gonna do finite states
-Waiting, CHECK_USER< GET_USER_NAME, GET_NEW_PAYMENT, PLACE_ORDER, SEND_CONFIRMATION
+**Question:** How do we connect the user's private info to the current conversation?
 
-Were are gonna do a state object with end state transition conditions:
--  CHECK_USER: KnownUser, UnknownUser
--  CHECK_PAYMENT: PaymentOnFIle, NoPaymentFile
--  CHECK_ADDRESS: AddressOnFile, NoAddressFile
--  Current order: Order
--  CONFIRMED": Confirmed, NotConfirmed
+---
 
-END STATE traditions conditions:
-KnownUser, PaymentOnFIle, AddressOnFile, Confirmed
+#### Example State
 
-IF currentState == END_STATE
-  // go order a pizza and checks if its confirmed on dominos
-  // if not, throw an error and let user update their state
-  // if it is, send a confirmation message
-  // clear the state
+- **Cold** ↔ **Warm** ↔ **Hot**
 
-State should be cached per user with the cache key being the user's twitter handle + pizza-order
+---
 
-Ordering a pizza
-- Create a new plugin
-- Create a new provider for pizza state
-- Create a start order action
-- Create a continue order action
-- Create an end order action
+#### Order Flow
 
-Types
-- Pizza order
-- Pizza order step
+1. **Agent** - Waiting for someone to order pizza.
+2. **User** - "Yo, let me get a small cheese pizza."
+3. **Agent** - Checks if it knows the user:
+   - **If the agent knows the user:**
+     - Checks if the user has a payment method on file:
+       - **If payment method exists:**
+         - Agent places the order.
+       - **If no payment method exists:**
+         - Agent asks the user for their payment method.
+         - **If the user provides a payment method:**
+           - Agent places the order.
+           - Agent sends a confirmation message to the user.
+         - **If the user does not provide a payment method:**
+           - Agent asks the user again.
+   - **If the agent does not know the user:**
+     - The agent asks the user for their name.
+     - The agent asks for a payment method.
+     - The agent places the order.
+     - The agent sends a confirmation message to the user.
 
+![Diagram](https://github.com/user-attachments/assets/08b4ed04-73d3-417f-9c3d-121d04f57eea)
+
+---
+
+#### Caveat
+
+- **We can't ask for private information in a public chat, so a private chat is required.**
+  - **In DMs:** Collect important private information directly.
+  - **In Public Messages:** Notify the user to DM the agent, but start the order process.
+
+---
+
+#### State Handling
+
+We are not using finite states like `Waiting`, `CHECK_USER`, `GET_USER_NAME`, `GET_NEW_PAYMENT`, `PLACE_ORDER`, `SEND_CONFIRMATION`. Instead, we are implementing a **state object** with the following transitions:
+
+- **State Transitions:**
+  - **CHECK_USER:** `KnownUser` ↔ `UnknownUser`
+  - **CHECK_PAYMENT:** `PaymentOnFile` ↔ `NoPaymentFile`
+  - **CHECK_ADDRESS:** `AddressOnFile` ↔ `NoAddressFile`
+  - **CURRENT_ORDER:** `Order`
+  - **CONFIRMED:** `Confirmed` ↔ `NotConfirmed`
+
+- **End State Transition Conditions:**
+  - `KnownUser`, `PaymentOnFile`, `AddressOnFile`, `Confirmed`
+
+- **If `currentState == END_STATE`:**
+  - Place the order and check if it's confirmed on Domino's.
+  - **If not confirmed:** Throw an error and prompt the user to update their state.
+  - **If confirmed:** Send a confirmation message and clear the state.
+
+- **State Caching:**  
+  Cache the state per user using the cache key:  
+  `user's_twitter_handle + pizza_order`
+
+---
+
+#### Steps to Implement Pizza Ordering
+
+1. **Create a New Plugin**
+     rename a plugin, files > packege.json
+     delete files on src
+     
+3. **Create a New Provider** for Pizza State
+4. **Define Actions:**
+   - Start Order Action
+   - Continue Order Action
+   - End Order Action
+
+---
+
+#### Types
+
+- **Pizza Order**
+- **Pizza Order Step**
